@@ -179,6 +179,7 @@ return [
 
         //new include
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        \JellyBool\Translug\TranslugServiceProvider::class,
 
     ],
 
@@ -228,6 +229,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+
+        //new include
+        'Translug' => \JellyBool\Translug\TranslugFacade::class,
 
     ],
 
