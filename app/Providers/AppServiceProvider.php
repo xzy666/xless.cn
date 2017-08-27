@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Article;
+use App\Question;
+use App\Video;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +17,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+
+        Relation::morphMap([
+            'articles' => Article::class,
+            'videos' => Video::class,
+            'questions'=>Question::class
+        ]);
     }
 
     /**
@@ -25,4 +34,5 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
 }
