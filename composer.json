@@ -11,7 +11,8 @@
         "jellybool/translug": "^2.0",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
-        "league/flysystem": "^1.0"
+        "league/flysystem": "^1.0",
+        "league/fractal": "^0.17.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
