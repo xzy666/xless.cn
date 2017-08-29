@@ -9,6 +9,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Article
+ * @property mixed id
+ * @property mixed title
+ * @property mixed subtitle
+ * @property mixed user
+ * @property mixed slug
+ * @property mixed content
+ * @property mixed page_image
+ * @property mixed meta_description
+ * @property mixed is_original
+ * @property mixed is_draft
+ * @property mixed view_count
+ * @property mixed published_at
  * @package App
  */
 class Article extends Model

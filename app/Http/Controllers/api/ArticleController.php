@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
  * Class ArticleController
  * @package App\Http\Controllers\api
  */
-class ArticleController extends Controller
+class ArticleController extends ApiController
 {
 
     /**
@@ -25,6 +25,7 @@ class ArticleController extends Controller
      */
     function __construct(ArticleRepository $articleRepository)
     {
+        parent::__construct();
         $this->article=$articleRepository;
     }
 
@@ -34,6 +35,6 @@ class ArticleController extends Controller
      */
     public function articles()
     {
-        return $this->article->all();
+        return $this->responseWithArray($this->article->page(),new ArticleTransformer);
     }
 }

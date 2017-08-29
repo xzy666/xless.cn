@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use League\Fractal\Manager;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
 /**
@@ -75,5 +77,114 @@ class ApiController extends Controller
         $resource=new Item($item,$callback);
         $rootScope=$this->fractal->createData($resource);
         return $this->responseWithArray($rootScope->toArray());
+    }
+
+    /**
+     * @param $collection
+     * @param $callback
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function responseWithCollection($collection, $callback)
+    {
+        $resource=new Collection($collection,$callback);
+        $rootScope=$this->fractal->createData($resource);
+        return $this->responseWithArray($rootScope->toArray());
+    }
+
+    /**
+     * @param $paginator
+     * @param $callback
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function responseWithPaginator($paginator, $callback)
+    {
+        $resource=new Collection($paginator,$callback);
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+        $rootScope=$this->fractal->creatData($resource);
+        return $this->responseWithArray($rootScope->toArray());
+
+    }
+
+    /**
+     * @param array $array
+     * @param array $header
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function responseWithArray(array $array, array $header=[])
+    {
+        return response()->json($array,$this->stateCode,$header);
+    }
+
+    /**
+     * @param $message
+     * @param $errorCode
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function responseWithError($message, $errorCode)
+    {
+        if ($this->stateCode===200){
+            trigger_error(
+                'no error',
+                E_USER_WARNING
+            );
+        }
+        return $this->responseWithArray([
+
+                'error'=>[
+                    'code'=>$errorCode,
+                    'http_code'=>$this->stateCode,
+                    'message'=>$message
+                ]
+            ]);
+    }
+
+    /**
+     * @param string $message
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function errorForbidden($message = 'Forbidden')
+    {
+        return $this->setStateCode(500)
+            ->responseWithError($message,static::CODE_FORBIDDEN);
+    }
+
+    /**
+     * @param string $message
+     * @return mixed
+     */
+    public function errorInternalError($message = 'Internal Error')
+    {
+        return $this->setStatusCode(500)
+            ->respondWithError($message, self::CODE_INTERNAL_ERROR);
+    }
+
+    /**
+     * @param string $message
+     * @return mixed
+     */
+    public function errorNotFound($message = 'Resource Not Found')
+    {
+        return $this->setStatusCode(404)
+            ->respondWithError($message, self::CODE_NOT_FOUND);
+    }
+
+    /**
+     * @param string $message
+     * @return mixed
+     */
+    public function errorUnauthorized($message = 'Unauthorized')
+    {
+        return $this->setStatusCode(401)
+            ->respondWithError($message, self::CODE_UNAUTHORIZED);
+    }
+
+    /**
+     * @param string $message
+     * @return mixed
+     */
+    public function errorWrongArgs($message = 'Wrong Arguments')
+    {
+        return $this->setStatusCode(400)
+            ->respondWithError($message, self::CODE_WRONG_ARGS);
     }
 }
