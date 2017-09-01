@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\api;
 
-use App\Article;
 use App\Http\Requests\ArticleRequest;
 use App\Repositories\ArticleRepository;
 use Illuminate\Http\Request;

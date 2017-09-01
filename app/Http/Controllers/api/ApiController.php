@@ -38,6 +38,9 @@ class ApiController extends Controller
     function __construct()
     {
         $this->fractal=new Manager();
+        if (isset($_GET['include'])){
+            $this->fractal->parseIncludes($_GET['include']);
+        }
     }
 
     /**
