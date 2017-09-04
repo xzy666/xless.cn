@@ -4,6 +4,7 @@ namespace App;
 
 use App\Services\Markdowner;
 use Illuminate\Database\Eloquent\Model;
+use Jcc\LaravelVote\CanBeVoted;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -12,7 +13,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Comment extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes,CanBeVoted;
+    protected $vote=User::class;
     /**
      * @var array
      */

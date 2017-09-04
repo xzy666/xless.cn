@@ -9,4 +9,7 @@ class Category extends Model
     protected $fillable=[
         'name','description','path','parent_id','image_url'
     ];
+    protected $dates=[
+        'created_at','updated_at'
+    ];
 }

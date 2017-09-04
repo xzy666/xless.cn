@@ -180,6 +180,7 @@ return [
         //new include
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         \JellyBool\Translug\TranslugServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
     ],
 
@@ -233,6 +234,9 @@ return [
 
         //new include
         'Translug' => \JellyBool\Translug\TranslugFacade::class,
+        Jcc\LaravelVote\VoteServiceProvider::class,
+        'Image' => Intervention\Image\Facades\Image::class,
+
 
     ],
 
