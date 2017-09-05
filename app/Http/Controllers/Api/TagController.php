@@ -8,7 +8,7 @@ use App\Transformers\TagTransformer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class TagController extends Controller
+class TagController extends ApiController
 {
 
     protected $tag;

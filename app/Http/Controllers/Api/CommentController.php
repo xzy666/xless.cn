@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\ReceivedComment as Received;
 
-class CommentController extends Controller
+class CommentController extends ApiController
 {
     protected $comment;
 
