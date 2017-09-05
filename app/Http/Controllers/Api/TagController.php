@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\TagRequest;
 use App\Repositories\TagRepository;
 use App\Transformers\TagTransformer;
 use Illuminate\Http\Request;

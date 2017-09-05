@@ -9,8 +9,15 @@ use App\Transformers\ArticleTransformer;
 
 class ArticleController extends ApiController
 {
+    /**
+     * @var ArticleRepository
+     */
     protected $article;
 
+    /**
+     * ArticleController constructor.
+     * @param ArticleRepository $article
+     */
     public function __construct(ArticleRepository $article)
     {
         parent::__construct();
@@ -25,6 +32,7 @@ class ArticleController extends ApiController
      */
     public function index()
     {
+
         return $this->respondWithPaginator($this->article->page(), new ArticleTransformer);
     }
 
@@ -94,4 +102,14 @@ class ArticleController extends ApiController
 
         return $this->noContent();
     }
+
+    /**
+     * 草稿箱
+     * @return mixed
+     */
+    public function draftBox()
+    {
+        return $this->respondWithCollection($this->article->getAllDraft(),new ArticleTransformer());
+    }
+
 }

@@ -66,7 +66,7 @@ class ApiController extends Controller
      */
     public function noContent()
     {
-        return response()->json(null, 204);
+        return response()->json(['msg'=>'success','code'=> 204,'data'=>null]);
     }
 
     /**

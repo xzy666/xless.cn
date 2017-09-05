@@ -22,6 +22,6 @@ class DraftScope implements Scope{
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->where('is_draft',0);
+        $builder->where('is_draft','=',0);
     }
 }

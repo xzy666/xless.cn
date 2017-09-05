@@ -1,74 +1,57 @@
 <?php
-namespace App\Repositories;
-use App\Article;
-use App\Scope\DraftScope;
-use App\Visitor;
 
-/**
- * Class ArticleRepository
- * @package App\Repositories
- */
-class ArticleRepository {
+namespace App\Repositories;
+
+use App\Article;
+use App\Scopes\DraftScope;
+
+class ArticleRepository
+{
     use BaseRepository;
-    /**
-     * @var Article
-     */
+
     protected $model;
-    /**
-     * @var Visitor
-     */
+
     protected $visitor;
 
-    /**
-     * ArticleRepository constructor.
-     * @param Article $article
-     * @param Visitor $visitor
-     */
-    function __construct(Article $article,Visitor $visitor)
+    public function __construct(Article $article, VisitorRepository $visitor)
     {
-        $this->model=$article;
-        $this->visitor=$visitor;
+        $this->model = $article;
+
+        $this->visitor = $visitor;
     }
 
     /**
-     * 验证
-     * @return $this|Article
+     * Get the page of articles without draft scope.
+     *
+     * @param  integer $number
+     * @param  string  $sort
+     * @param  string  $sortColumn
+     * @return collection
      */
-    public function checkAuthScope()
+    public function page($number = 10, $sort = 'desc', $sortColumn = 'created_at')
     {
-        if (auth()->check()&&auth()->user()->is_admin){
-            $this->model=$this->model->withoutGlobalScope(DraftScope::class);
-        }
-        return $this->model;
+        $this->model = $this->checkAuthScope();
+
+        return $this->model->orderBy($sortColumn, $sort)->paginate($number);
     }
 
     /**
-     * 分页
-     * @param int $no
-     * @param string $sort
-     * @param string $orderBy
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    public function page($no = 10, $sort = 'desc', $orderBy = 'created_at')
-    {
-        $this->model=$this->checkAuthScope();
-        return $this->model->orderBy($orderBy,$sort)->paginate($no);
-    }
-
-    /**
-     * @param $id
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+     * Get the article record without draft scope.
+     *
+     * @param  int $id
+     * @return mixed
      */
     public function getById($id)
     {
-        return $this->model->withGlobalScope(DraftScope::class)->findOrFail($id);
+        return $this->model->withoutGlobalScope(DraftScope::class)->findOrFail($id);
     }
 
     /**
-     * 更新
-     * @param $id
-     * @param $input
-     * @return mixed
+     * Update the article record without draft scope.
+     *
+     * @param  int $id
+     * @param  array $input
+     * @return boolean
      */
     public function update($id, $input)
     {
@@ -78,46 +61,95 @@ class ArticleRepository {
     }
 
     /**
-     * 通过别名获取文章
+     * Get the article by article's slug.
+     * The Admin can preview the article if the article is drafted.
+     *
      * @param $slug
-     * @return \Illuminate\Database\Eloquent\Model|static
+     * @return object
      */
     public function getBySlug($slug)
     {
-        $this->model=$this->checkAuthScope();
-        $article=$this->model->where('slug','=',$slug)->firstOrFail();
+        $this->model = $this->checkAuthScope();
+
+        $article = $this->model->where('slug', $slug)->firstOrFail();
+
         $article->increment('view_count');
+
         $this->visitor->log($article->id);
+
         return $article;
     }
 
     /**
-     * @param array $tags
+     * Check the auth and the model without global scope when user is the admin.
+     *
+     * @return Model
+     */
+    public function checkAuthScope()
+    {
+        if (auth()->check() && auth()->user()->is_admin) {
+            $this->model = $this->model->withoutGlobalScope(DraftScope::class);
+        }
+
+        return $this->model;
+    }
+
+    /**
+     * Sync the tags for the article.
+     *
+     * @param  int $number
+     * @return Paginate
      */
     public function syncTag(array $tags)
     {
         $this->model->tags()->sync($tags);
     }
 
-    /**
-     * @param $q
-     * @return \Illuminate\Support\Collection
+    /**wt
+     * Search the articles by the keyword.
+     *
+     * @param  string $key
+     * @return collection
      */
-    public function search($q)
+    public function search($key)
     {
-        $q=trim($q);
+        $key = trim($key);
+
         return $this->model
-                    ->where('title','like',"%{$q}%")
-                    ->orderBy('published_at')
-                    ->get();
+            ->where('title', 'like', "%{$key}%")
+            ->orderBy('published_at', 'desc')
+            ->get();
+
     }
 
     /**
-     * @param $id
-     * @return bool|null
+     * Delete the draft article.
+     *
+     * @param int $id
+     * @return boolean
      */
     public function destroy($id)
     {
         return $this->getById($id)->delete();
+    }
+
+
+    /**
+     * 获取所有草稿 => 草稿箱
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAllDraft()
+    {
+        return $this->model->where('is_draft','=',1)->withGlobalScope(DraftScope::class)->get();
+    }
+
+    /**
+     * 获取某篇草稿
+     * @param $id
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+     */
+    public function getOneDraftById($id)
+    {
+        return $this->model->where('is_draft','=',1)->withGlobalScope(DraftScope::class)->findOrFail($id);
     }
 }

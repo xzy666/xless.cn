@@ -1,15 +1,32 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: xizy
- * Date: 2017/9/4
- * Time: 下午8:51
- */
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
 
-class TagRequest
+class TagRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'tag' => 'required|unique:tags',
+            'title' => 'required',
+            'meta_description' => 'required'
+        ];
+    }
 }

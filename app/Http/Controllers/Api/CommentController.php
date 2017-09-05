@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\CommentRepository;
+use App\Http\Requests\CommentRequest;
 use App\Transformers\CommentTransformer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
