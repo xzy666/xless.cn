@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Visitor
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Visitor extends Model
 {
+    use SoftDeletes;
     /**
      * @var array
      */

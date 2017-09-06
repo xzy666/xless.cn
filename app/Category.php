@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Category
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Category extends Model
 {
+    use SoftDeletes;
     /**
      * @var array
      */
@@ -20,7 +22,7 @@ class Category extends Model
      * @var array
      */
     protected $dates=[
-        'created_at','updated_at'
+        'created_at','updated_at','deleted_at'
     ];
 
     /**

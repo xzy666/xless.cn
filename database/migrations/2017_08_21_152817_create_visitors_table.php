@@ -21,6 +21,7 @@ class CreateVisitorsTable extends Migration
             $table->string('country')->nullable()->comment('area');
             $table->integer('clicks')->unsigned()->default(1)->comment('clicksss');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
